@@ -1,0 +1,22 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+    <h1>Rechercher un médecin</h1>
+    <form action="" method="post">
+        <input type="text">
+    </form>
+
+    <h2>Ils utilisent CareTime</h2>
+    <ul>
+        {% for organization in organizations %}
+            <li>{{ organization.name }}</li>
+            {% if organization.organization_set.all %}
+                <ul>
+                    {% for child_organization in organization.organization_set.all %}
+                        <li>{{ child_organization.name }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock content %}
