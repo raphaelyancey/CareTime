@@ -1,0 +1,10 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+
+    <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
+
+    <h3>Retard actuel</h3>
+    <h1>{{delay}}</h1>
+    
+{% endblock content %}

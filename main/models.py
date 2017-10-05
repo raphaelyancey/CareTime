@@ -14,6 +14,8 @@ class Organization(models.Model):
 
 
 class Host(models.Model):
+    titles = [('Dr', 'Docteur')]
+    title = models.CharField(blank=True, null=True, max_length=30, choices=titles)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=False)
     slug = models.SlugField(blank=False)
@@ -22,14 +24,16 @@ class Host(models.Model):
     def __str__(self):
         if self.first_name:
             return self.first_name + ' ' + self.last_name
+        elif self.first_name and self.title:
+            return self.title + ' ' + self.first_name + ' ' + self.last_name
         else:
             return self.last_name
 
 
 class Appointment(models.Model):
     scheduled_time = models.TimeField()
-    pickup_time = models.TimeField(auto_now_add=True)
+    pickup_time = models.TimeField()
     host = models.ForeignKey('Host', on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.scheduled_time)
+        return str(self.host) + ' — ' + str(self.scheduled_time)

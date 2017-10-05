@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+
+    <h2>{{organization.name}}</h2>
+
+    {% if organization.organization_set.all %}
+        <fieldset>
+            <legend>Child organizations</legend>
+            <ul>
+                {% for child_organization in organization.organization_set.all %}
+                    <a href="{% url 'organization' child_organization.slug %}">{{child_organization.name}}</a>
+                {% endfor %}
+            </ul>
+        </fieldset>
+    {% endif %}
+
+    {% if organization.host_set %}
+        <fieldset>
+            <legend>Hosts</legend>
+            <ul>
+                {% for host in organization.host_set.all %}
+                    <a href="{% url 'host_front' host.slug %}">{{host}}</a>
+                {% endfor %}
+            </ul>
+        </fieldset>
+    {% endif %}
+    
+{% endblock content %}

@@ -16,7 +16,18 @@ def index(request):
     return render(request, 'main/index.html', context)
 
 
-def host(request, host_slug):
+def organization(request, org_slug):
+
+    organization = Organization.objects.get(slug=org_slug)
+
+    context = {
+        'organization': organization
+    }
+
+    return render(request, 'main/organization.html', context)
+
+
+def host_admin(request, host_slug):
 
     pickup_form = PickupForm()
     host = Host.objects.get(slug=host_slug)
@@ -31,23 +42,40 @@ def host(request, host_slug):
 
         if form.is_valid():
 
-            appointment = Appointment(host=host, scheduled_time=form.cleaned_data['pickup_time'])
+            pickup_time = datetime.now().replace(microsecond=0).time()
+            pickup_date = datetime.combine(date.min, pickup_time)
+            scheduled_time = form.cleaned_data['pickup_time']
+            scheduled_date = datetime.combine(date.min, scheduled_time)
+
+            appointment = Appointment(host=host, scheduled_time=scheduled_time, pickup_time=pickup_time)
             appointment.save()
 
-            now = datetime.combine(date.min, datetime.now().time())
-            scheduled = datetime.combine(date.min, appointment.scheduled_time)
-            delay = now - scheduled
-
-            print(now)
-            print(scheduled)
-            print(delay)
+            delay = pickup_date - scheduled_date
 
             context.update({
-            'picked_up': True,
-            'appointment': appointment,
-            'delay': delay
+                'picked_up': True,
+                'appointment': appointment,
+                'delay': delay
             })
 
-            return render(request, 'main/host.html', context)
+            return render(request, 'main/host_admin.html', context)
 
-    return render(request, 'main/host.html', context)
+    return render(request, 'main/host_admin.html', context)
+
+
+def host_front(request, host_slug):
+
+    host = Host.objects.get(slug=host_slug)
+
+    last_appointment = Appointment.objects.filter(host=host).latest(field_name='pickup_time')
+
+    pickup_date = datetime.combine(date.min, last_appointment.pickup_time)
+    scheduled_date = datetime.combine(date.min, last_appointment.scheduled_time)
+    delay = pickup_date - scheduled_date
+
+    context = {
+        'host': host,
+        'delay': delay
+    }
+
+    return render(request, 'main/host_front.html', context)

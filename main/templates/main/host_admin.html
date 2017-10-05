@@ -1,0 +1,17 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+
+    <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
+
+    <form action="{% url 'host_admin' host.slug %}" method="POST">
+        {{ pickup_form }}
+        <input type="submit" value="Prise en charge">
+        {% csrf_token %}
+    </form>
+
+    {% if picked_up %}
+        <i>Prise en charge du rendez-vous de {{ appointment.scheduled_time }}{% if delay.total_seconds > 0 %} (avec un retard de {{delay}}){% endif %}</i>
+    {% endif %}
+    
+{% endblock content %}

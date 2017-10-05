@@ -9,11 +9,11 @@
     <h2>Ils utilisent CareTime</h2>
     <ul>
         {% for organization in organizations %}
-            <li>{{ organization.name }}</li>
+            <li><a href="{% url 'organization' organization.slug %}">{{ organization.name }}</a></li>
             {% if organization.organization_set.all %}
                 <ul>
                     {% for child_organization in organization.organization_set.all %}
-                        <li>{{ child_organization.name }}</li>
+                        <li><a href="{% url 'organization' child_organization.slug %}">{{ child_organization.name }}</a></li>
                     {% endfor %}
                 </ul>
             {% endif %}
