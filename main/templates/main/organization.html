@@ -1,26 +1,27 @@
 {% extends "main/base.html" %}
+{% load i18n %}
 
 {% block content %}
 
-    <h2>{{organization.name}}</h2>
+    <h2 class="mb-4">{{organization.name}}</h2>
 
     {% if organization.organization_set.all %}
         <fieldset>
-            <legend>Child organizations</legend>
+            <legend>{% trans "Sous-organisations" %}</legend>
             <ul>
                 {% for child_organization in organization.organization_set.all %}
-                    <a href="{% url 'organization' child_organization.slug %}">{{child_organization.name}}</a>
+                    <li><a href="{% url 'organization' child_organization.slug %}">{{child_organization.name}}</a></li>
                 {% endfor %}
             </ul>
         </fieldset>
     {% endif %}
 
-    {% if organization.host_set %}
+    {% if all_hosts %}
         <fieldset>
-            <legend>Hosts</legend>
+            <legend>{% trans "Professionnels" %}</legend>
             <ul>
-                {% for host in organization.host_set.all %}
-                    <a href="{% url 'host_front' host.slug %}">{{host}}</a>
+                {% for host in all_hosts.all %}
+                    <li><a href="{% url 'host_front' host.slug %}">{{host.last_name|upper}} {{host.first_name}}</a></li>
                 {% endfor %}
             </ul>
         </fieldset>

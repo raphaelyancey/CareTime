@@ -1,12 +1,8 @@
 {% extends "main/base.html" %}
+{% load i18n %}
 
 {% block content %}
-    <h1>Rechercher un médecin</h1>
-    <form action="" method="post">
-        <input type="text">
-    </form>
-
-    <h2>Ils utilisent CareTime</h2>
+    <h4>{% trans "Ils utilisent CareTime" %}</h4>
     <ul>
         {% for organization in organizations %}
             <li><a href="{% url 'organization' organization.slug %}">{{ organization.name }}</a></li>

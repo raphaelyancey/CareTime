@@ -1,0 +1,24 @@
+{% extends "main/base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <p>
+        {% blocktrans trimmed %}
+        <b>Si vous souhaitez utiliser apparaître sur le site principal</b> (celui sur lequel vous êtes actuellement),<br>merci d'envoyer un email à <a href="mailto:caretime@badfile.net?subject=Demande d'inscription">caretime@raphaelyancey.fr</a>. <b>L'inscription est gratuite.</b>    
+        {% endblocktrans %}
+    </p>
+
+    <p>
+        {% blocktrans trimmed %}
+        <b>CareTime est open-source</b> sous licence MIT et peut ainsi être installé par quiconque sur sa propre infrastructure.
+        {% endblocktrans %}
+    </p>
+    <p>
+        <a href="http://github.com/raphaelyancey/CareTime" target="_blank">
+            <button class="btn btn-dark">
+                <i class="fa fa-github"></i>
+                Github
+            </button>
+        </a>
+    </p>
+{% endblock content %}

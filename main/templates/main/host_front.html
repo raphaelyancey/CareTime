@@ -1,10 +1,26 @@
 {% extends "main/base.html" %}
+{% load i18n %}
 
 {% block content %}
+<div class="row">
+    <div class="col text-center">
+        <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
 
-    <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
+        {# `delay` can be used to tell wether there is an appointment today #}
+        {% if delay %}
 
-    <h3>Retard actuel</h3>
-    <h1>{{delay}}</h1>
-    
-{% endblock content %}
+            {% if is_delayed %}
+                <h5 class="mt-5 ">{% trans "Le dernier rendez-vous a été prit avec un retard de" %}</h5>
+                <h1>{{human_delay}}</h1>
+            {% else %}
+                <h3 class="mt-5 text-success">Pas de retard sur le dernier rendez-vous</h3>
+            {% endif %}
+
+            <h5 class="mt-5">{% trans "Aujourd'hui, le retard moyen par rendez-vous est de" %}</h5>
+            <h4>{{human_mean_delay}}</h4>
+        {% else %}
+            <h4 class="mt-5">{% trans "Aucun rendez-vous n'a été prit aujourd'hui" %}</h4>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}  

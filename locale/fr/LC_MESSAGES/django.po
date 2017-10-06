@@ -1,0 +1,64 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-10-06 16:29+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: main/templates/main/about.html:5
+msgid ""
+"<i>CareTime</i> est une application web (encore au stade de prototype) ayant "
+"pour but de <b>limiter la frustration d'une attente trop longue en salle "
+"d'attente</b> chez un professionnel qui reçoit ses clients / patients. "
+"Initialement prévu pour les salles d'attente d'hôpitaux publics, sur une "
+"idée de ma mère !"
+msgstr ""
+
+#: main/templates/main/about.html:11
+msgid ""
+"<b>Le principe est simple :</b> le professionnel renseigne l'heure prévue du "
+"rendez-vous à chaque prise en charge. <b>L'application calcule la différence "
+"avec l'heure actuelle et en déduit le retard.</b> Les clients / patients "
+"peuvent se rendre sur le site, avant leur rendez-vous, et se tenir au "
+"courant du retard moyen au cours de la journée afin de ne pas arriver à "
+"l'heure pour se rendre compte qu'il faut patienter, par exemple, 30 minutes."
+msgstr ""
+
+#: main/templates/main/host_front.html:8
+msgid "Retard actuel"
+msgstr ""
+
+#: main/templates/main/host_front.html:11
+msgid "Pas de retard à signaler"
+msgstr ""
+
+#: main/templates/main/index.html:5
+msgid "Ils utilisent CareTime"
+msgstr ""
+
+#: main/templates/main/signup.html:5
+msgid ""
+"<b>Si vous souhaitez utiliser apparaître sur le site principal</b> (celui "
+"sur lequel vous êtes actuellement),<br>merci d'envoyer un email à <a href="
+"\"mailto:caretime@badfile.net?subject=Demande d'inscription"
+"\">caretime@raphaelyancey.fr</a>. <b>L'inscription est gratuite.</b>"
+msgstr ""
+
+#: main/templates/main/signup.html:11
+msgid ""
+"<b>CareTime est open-source</b> sous licence MIT et peut ainsi être installé "
+"par quiconque sur sa propre infrastructure."
+msgstr ""

@@ -1,19 +1,32 @@
 from django.db import models
+from datetime import datetime
 
 
-class Organization(models.Model):
+class BaseModel(models.Model):
+
+    created_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+
+    class Meta:
+        abstract = True
+
+
+class Organization(BaseModel):
+
     name = models.CharField(max_length=100, blank=False)
     slug = models.SlugField(blank=False)
     parent_organization = models.ForeignKey('Organization', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        if self.parent_organization:
-            return self.parent_organization.name + ' — ' + self.name
-        else:
-            return self.name
+        def get_full_name(Organization):
+            if Organization.parent_organization:
+                return get_full_name(Organization.parent_organization) + ' — ' + Organization.name
+            else:
+                return Organization.name
+        return get_full_name(self)
 
 
-class Host(models.Model):
+class Host(BaseModel):
+
     titles = [('Dr', 'Docteur')]
     title = models.CharField(blank=True, null=True, max_length=30, choices=titles)
     first_name = models.CharField(max_length=100, blank=True, null=True)
@@ -30,7 +43,8 @@ class Host(models.Model):
             return self.last_name
 
 
-class Appointment(models.Model):
+class Appointment(BaseModel):
+
     scheduled_time = models.TimeField()
     pickup_time = models.TimeField()
     host = models.ForeignKey('Host', on_delete=models.CASCADE)
