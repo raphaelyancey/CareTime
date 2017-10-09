@@ -4,14 +4,39 @@
 
     <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
 
-    <form action="{% url 'host_admin' host.slug %}" method="POST">
-        {{ pickup_form }}
-        <input type="submit" value="Prise en charge">
+    <form action="{% url 'host_admin' host.slug %}" method="POST" id="pickup-form">
+
+        <input type="text" v-model="scheduled_hour_1">
+        <input type="text" v-model="scheduled_hour_2">
+        <input type="text" v-model="scheduled_minute_1">
+        <input type="text" v-model="scheduled_minute_2">
+        [[ scheduled_time ]]
+        <input id="id_scheduled_time" name="scheduled_time" v-model="scheduled_time" type="hidden">
         {% csrf_token %}
     </form>
 
     {% if picked_up %}
         <i>Prise en charge du rendez-vous de {{ appointment.scheduled_time }}{% if delay.total_seconds > 0 %} (avec un retard de {{delay}}){% endif %}</i>
     {% endif %}
+
+    <script type="text/javascript">
+        document.onready = function() {
+            var app = new Vue({
+                delimiters: ['[[', ']]'],
+                el: '#pickup-form',
+                data: {
+                    scheduled_hour_1: '1',
+                    scheduled_hour_2: '5',
+                    scheduled_minute_1: '1',
+                    scheduled_minute_2: '5'
+                },
+                computed: {
+                    scheduled_time: function() {
+                        return this.scheduled_hour_1+this.scheduled_hour_2+':'+this.scheduled_minute_1+this.scheduled_minute_2;
+                    }
+                }
+            })
+        }
+    </script>
     
 {% endblock content %}
