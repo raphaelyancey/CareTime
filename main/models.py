@@ -40,8 +40,9 @@ class Host(BaseModel):
     title = models.CharField(blank=True, null=True, max_length=30, choices=titles)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=False)
-    slug = models.SlugField(blank=False)
+    slug = models.SlugField(blank=False, unique=True)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
+    password = models.CharField(max_length=100)
 
     def __str__(self):
         if self.first_name:

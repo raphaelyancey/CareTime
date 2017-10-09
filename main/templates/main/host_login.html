@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+    <h2>Connexion</h2>
+
+    <form action="{% url 'host_login' host.slug %}" method="POST">
+        {{ login_form }}
+        <input type="submit" value="{% trans "Connexion" %}">
+        {% csrf_token %}
+    </form>
+    
+{% endblock content %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
 from datetime import datetime, date, timedelta, time
@@ -50,6 +50,9 @@ def organization(request, org_slug):
 
 def host_admin(request, host_slug):
 
+    if request.session.get('logged_user') is None:
+        return redirect('host_login', host_slug=host_slug)
+
     pickup_form = PickupForm()
     host = Host.objects.get(slug=host_slug)
 
@@ -84,6 +87,32 @@ def host_admin(request, host_slug):
     return render(request, 'main/host_admin.html', context)
 
 
+def host_login(request, host_slug):
+
+    if request.session.get('logged_user') is not None:
+        return redirect('host_admin', host_slug=host_slug)
+
+    login_form = LoginForm()
+    host = Host.objects.get(slug=host_slug)
+
+    context = {
+        'host': host,
+        'login_form': login_form
+    }
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            typed_password = form.cleaned_data['password']
+            try:
+                Host.objects.get(slug=host_slug, password=typed_password)
+                request.session['logged_user'] = host_slug
+                return redirect('host_admin', host_slug=host_slug)
+            except Host.DoesNotExist:
+                return render(request, 'main/host_login.html', context)
+    return render(request, 'main/host_login.html', context)
+
+
 def host_front(request, host_slug):
 
     host = Host.objects.get(slug=host_slug)
@@ -107,7 +136,7 @@ def host_front(request, host_slug):
         tomorrow = today + timedelta(1)
         today_start = datetime.combine(today, time())
         today_end = datetime.combine(tomorrow, time())
-        
+
         all_day_appointments = Appointment.objects.filter(host=host, created_at__gte=today_start, created_at__lte=today_end).all()
         all_day_delays = list(map(compute_appointment_delay, all_day_appointments))
         mean_delay = mean(all_day_delays)
