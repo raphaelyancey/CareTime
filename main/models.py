@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from functools import reduce
+from django.contrib.auth.hashers import make_password, is_password_usable
 
 
 class BaseModel(models.Model):
@@ -43,6 +44,12 @@ class Host(BaseModel):
     slug = models.SlugField(blank=False, unique=True)
     organization = models.ForeignKey('Organization', on_delete=models.CASCADE)
     password = models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        # Do not hash the password twice (i.e. when updating the model)
+        if not is_password_usable(self.password):
+            self.password = make_password(self.password)
+        super(Host, self).save(*args, **kwargs)
 
     def __str__(self):
         if self.first_name:

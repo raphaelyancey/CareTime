@@ -4,6 +4,7 @@ from .forms import *
 from datetime import datetime, date, timedelta, time
 from numpy import mean
 import humanize
+from django.contrib.auth.hashers import check_password
 
 
 def about(request):
@@ -104,12 +105,13 @@ def host_login(request, host_slug):
         form = LoginForm(request.POST)
         if form.is_valid():
             typed_password = form.cleaned_data['password']
-            try:
-                Host.objects.get(slug=host_slug, password=typed_password)
+            stored_password = Host.objects.get(slug=host_slug).password
+            if check_password(typed_password, stored_password) is True:
                 request.session['logged_user'] = host_slug
                 return redirect('host_admin', host_slug=host_slug)
-            except Host.DoesNotExist:
-                return render(request, 'main/host_login.html', context)
+            else:
+                return render(request, 'main/host_login.html', context)    
+
     return render(request, 'main/host_login.html', context)
 
 
