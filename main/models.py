@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from functools import reduce
 
 
 class BaseModel(models.Model):
@@ -16,13 +17,21 @@ class Organization(BaseModel):
     slug = models.SlugField(blank=False)
     parent_organization = models.ForeignKey('Organization', on_delete=models.CASCADE, blank=True, null=True)
 
+    def get_all_parents(self, parents=None):
+        if not parents:
+            parents = []
+        if self.parent_organization:
+            parents.append(self.parent_organization)
+            return self.parent_organization.get_all_parents(parents=parents)
+        else:
+            return parents
+
     def __str__(self):
-        def get_full_name(Organization):
-            if Organization.parent_organization:
-                return get_full_name(Organization.parent_organization) + ' — ' + Organization.name
-            else:
-                return Organization.name
-        return get_full_name(self)
+        full_name = reduce(
+            lambda prev, x: str(x.name + ' — ' + prev),
+            self.get_all_parents(),
+            self.name)
+        return full_name
 
 
 class Host(BaseModel):
