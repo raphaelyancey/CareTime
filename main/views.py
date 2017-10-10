@@ -59,6 +59,7 @@ def host_admin(request, host_slug):
 
     context = {
         'host': host,
+        'all_day_appointments': host.appointment_set.all().order_by('-scheduled_time'),
         'pickup_form': pickup_form
     }
 
@@ -69,7 +70,7 @@ def host_admin(request, host_slug):
 
             pickup_time = datetime.now().replace(microsecond=0).time()
             pickup_date = datetime.combine(date.min, pickup_time)
-            scheduled_time = form.cleaned_data['pickup_time']
+            scheduled_time = form.cleaned_data['scheduled_time']
             scheduled_date = datetime.combine(date.min, scheduled_time)
 
             appointment = Appointment(host=host, scheduled_time=scheduled_time, pickup_time=pickup_time)
@@ -79,7 +80,7 @@ def host_admin(request, host_slug):
 
             context.update({
                 'picked_up': True,
-                'appointment': appointment,
+                'added_appointment': appointment,
                 'delay': delay
             })
 

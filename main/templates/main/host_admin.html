@@ -1,5 +1,6 @@
 {% extends "main/base.html" %}
 {% load i18n %}
+{% load custom_filters %}
 
 {% block header %}
     <a href="/" class="btn btn-light"><i class="fa fa-angle-left"></i> &nbsp; {% trans "Retour" %}</a>
@@ -7,87 +8,114 @@
 
 {% block content %}
 
-    <div class="text-center mb-4 mt-4 mt-sm-0">
-        <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
-        <h4 class="text-muted">{% trans "Prise en charge d'un rendez-vous prévu à" %}</h2>
-    </div>
-
-    <div class="d-flex justify-content-center">
-        <form action="{% url 'host_admin' host.slug %}" method="POST" id="pickup-form">
-            <div class="d-flex align-items-center">
-                <div class="d-flex flex-column">
-                    <div class="time-control text-primary" v-on:click="increase_hour"><i class="fa fa-plus-circle"></i></div>
-                    <div><input class="form-control" type="text" v-model="scheduled_hours" v-on:blur="format_hour"></div>
-                    <div class="time-control text-primary" v-on:click="decrease_hour"><i class="fa fa-minus-circle"></i></div>
-                </div>
-                
-                <span class="text-muted separator">:</span>
-                
-                <div class="d-flex flex-column">
-                    <div class="time-control text-primary" v-on:click="increase_minutes"><i class="fa fa-plus-circle"></i></div>
-                    <div><input class="form-control" type="text" v-model="scheduled_minutes" v-on:blur="format_minutes"></div>
-                    <div class="time-control text-primary" v-on:click="decrease_minutes"><i class="fa fa-minus-circle"></i></div>
-                </div>
+    <div class="row">
+        <div class="col">
+            <div class="text-center mb-4 mt-4 mt-sm-0">
+                <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
+                <h4 class="text-muted">{% trans "Prise en charge d'un rendez-vous prévu à" %}</h2>
             </div>
-            <input id="id_scheduled_time" name="scheduled_time" v-model="scheduled_time" type="hidden">
-            {% csrf_token %}
-            <button class="btn btn-block btn-lg btn-primary mt-4" role="submit">Prise en charge</button>
-        </form>
+
+            <div class="d-flex justify-content-center">
+                <form action="{% url 'host_admin' host.slug %}" method="POST" id="pickup-form">
+                    <div class="d-flex align-items-center">
+                        <div class="d-flex flex-column">
+                            <div class="time-control text-primary" v-on:click="increase_hour"><i class="fa fa-plus-circle"></i></div>
+                            <div><input class="form-control" type="text" v-model="scheduled_hours" v-on:blur="format_hour"></div>
+                            <div class="time-control text-primary" v-on:click="decrease_hour"><i class="fa fa-minus-circle"></i></div>
+                        </div>
+                        
+                        <span class="text-muted separator">:</span>
+                        
+                        <div class="d-flex flex-column">
+                            <div class="time-control text-primary" v-on:click="increase_minutes"><i class="fa fa-plus-circle"></i></div>
+                            <div><input class="form-control" type="text" v-model="scheduled_minutes" v-on:blur="format_minutes"></div>
+                            <div class="time-control text-primary" v-on:click="decrease_minutes"><i class="fa fa-minus-circle"></i></div>
+                        </div>
+                    </div>
+                    <input id="id_scheduled_time" name="scheduled_time" v-model="scheduled_time" type="hidden">
+                    {% csrf_token %}
+                    <button class="btn btn-block btn-lg btn-primary mt-4 p-3" role="submit">Prise en charge</button>
+                </form>
+            </div>
+
+            {% if picked_up %}
+            <div class="text-center mt-2">
+                <i>Prise en charge du rendez-vous de {{ added_appointment.scheduled_time }}{% if delay.total_seconds > 0 %} (+ {{delay}}){% endif %}</i>
+            </div>
+            {% endif %}  
+        </div>
     </div>
 
-    {% if picked_up %}
-        <i>Prise en charge du rendez-vous de {{ appointment.scheduled_time }}{% if delay.total_seconds > 0 %} (avec un retard de {{delay}}){% endif %}</i>
-    {% endif %}
+    <div class="row">
+        <div class="col mr-ml-auto">
+            <table class="table table-striped mt-5">
+                <thead>
+                    <th>{% trans "Aujourd'hui" %}</th>
+                    <th>{% trans "Heure prévue" %}</th>
+                    <th>{% trans "Prise en charge" %}</th>
+                </thead>
+                <tbody>
+                    {% for appointment in all_day_appointments  %}
+                    <tr class="{% if picked_up and appointment is added_appointment %}table-success{% endif %}">
+                        <td></td>
+                        <td>{{appointment.scheduled_time|date:"H:i"}}</td>
+                        <td>{{appointment.pickup_time|date:"H:i"}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>  
+        </div>
+    </div>
 
     <script type="text/javascript">
         document.onready = function() {
 
-            var MINUTES_STEP = 15;
             var NOW = {
                 hours: (new Date()).getHours(),
                 minutes: (new Date()).getMinutes()
+            };
+
+            var utils = {
+                zero_pad: function(input) {
+                    if(input < 10 && input > 0) return '0'+input;
+                    else if(input == 0) return '00';
+                    else return input+'';
+                },
+                format: function(input) {
+                    return this.zero_pad(parseInt(input));
+                }
             };
             
             new Vue({
                 delimiters: ['[[', ']]'],
                 el: '#pickup-form',
                 data: {
-                    scheduled_hours: NOW.hours,
-                    scheduled_minutes: NOW.minutes
+                    scheduled_hours: utils.format(NOW.hours),
+                    scheduled_minutes: utils.format(NOW.minutes),
                 },
                 computed: {
                     scheduled_time: function() {
-                        var u = this.$options.utils;
+                        var u = utils;
                         return u.format(this.scheduled_hours)+':'+u.format(this.scheduled_minutes);
-                    }
-                },
-                utils: {
-                    zero_pad: function(input) {
-                        if(input < 10 && input > 0) return '0'+input;
-                        else if(input == 0) return '00';
-                        else return input+'';
-                    },
-                    format: function(input) {
-                        return this.zero_pad(parseInt(input));
                     }
                 },
                 methods: {
                     increase_hour: function() {
                         h = parseInt(this.scheduled_hours);
-                        u = this.$options.utils;
+                        u = utils;
                         this.scheduled_hours = (h+1 >= 24) ? 0 : h+1;
                         this.scheduled_hours = u.format(this.scheduled_hours);
                     },
                     decrease_hour: function() {
                         h = parseInt(this.scheduled_hours);
-                        u = this.$options.utils;
+                        u = utils;
                         this.scheduled_hours = (h-1 < 0 ) ? 23 : h-1;
                         this.scheduled_hours = u.format(this.scheduled_hours);
                     },
                     increase_minutes: function() {
 
                         h = parseInt(this.scheduled_minutes);
-                        u = this.$options.utils;
+                        u = utils;
 
                         if(h >= 0 && h < 15)
                             this.scheduled_minutes = 15;
@@ -103,7 +131,7 @@
                     decrease_minutes: function() {
 
                         h = parseInt(this.scheduled_minutes);
-                        u = this.$options.utils;
+                        u = utils;
 
                         if(h > 0 && h <= 15)
                             this.scheduled_minutes = 0;
@@ -117,11 +145,11 @@
                         this.scheduled_minutes = u.format(this.scheduled_minutes);
                     },
                     format_hour: function() {
-                        var u = this.$options.utils;
+                        var u = utils;
                         this.scheduled_hours = u.format(this.scheduled_hours);
                     },
                     format_minutes: function() {
-                        var u = this.$options.utils;
+                        var u = utils;
                         this.scheduled_minutes = u.format(this.scheduled_minutes);
                     }
                 }
