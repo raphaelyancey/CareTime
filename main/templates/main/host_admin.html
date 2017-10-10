@@ -9,7 +9,7 @@
         <div class="d-flex align-items-center">
             <div class="d-flex flex-column">
                 <div class="time-control text-primary" v-on:click="increase_hour"><i class="fa fa-plus-circle"></i></div>
-                <div><input class="form-control" type="text" v-model="formatted_hours"></div>
+                <div><input class="form-control" type="text" v-model="scheduled_hours" v-on:blur="format_hour"></div>
                 <div class="time-control text-primary" v-on:click="decrease_hour"><i class="fa fa-minus-circle"></i></div>
             </div>
             
@@ -17,7 +17,7 @@
             
             <div class="d-flex flex-column">
                 <div class="time-control text-primary" v-on:click="increase_minutes"><i class="fa fa-plus-circle"></i></div>
-                <div><input class="form-control" type="text" v-model="formatted_minutes"></div>
+                <div><input class="form-control" type="text" v-model="scheduled_minutes" v-on:blur="format_minutes"></div>
                 <div class="time-control text-primary" v-on:click="decrease_minutes"><i class="fa fa-minus-circle"></i></div>
             </div>
         </div>
@@ -40,22 +40,14 @@
                 delimiters: ['[[', ']]'],
                 el: '#pickup-form',
                 data: {
-                    scheduled_hours: 15,
-                    scheduled_minutes: 13
+                    scheduled_hours: '15',
+                    scheduled_minutes: '13'
                 },
                 computed: {
                     scheduled_time: function() {
                         var u = this.$options.utils;
-                        return u.zero_pad(this.scheduled_hours)+':'+u.zero_pad(this.scheduled_minutes);
-                    },
-                    formatted_hours: function() {
-                        var u = this.$options.utils;
-                        return u.zero_pad(this.scheduled_hours);
-                    },
-                    formatted_minutes: function() {
-                        var u = this.$options.utils;
-                        return u.zero_pad(this.scheduled_minutes);
-                    },
+                        return u.zero_pad(parseInt(this.scheduled_hours))+':'+u.zero_pad(parseInt(this.scheduled_minutes));
+                    }
                 },
                 utils: {
                     zero_pad: function(input) {
@@ -66,20 +58,32 @@
                 },
                 methods: {
                     increase_hour: function() {
-                        h = this.scheduled_hours;
+                        h = parseInt(this.scheduled_hours);
                         this.scheduled_hours = (h+1 >= 24) ? 0 : h+1;
+                        this.scheduled_hours += '';
                     },
                     decrease_hour: function() {
-                        h = this.scheduled_hours;
+                        h = parseInt(this.scheduled_hours);
                         this.scheduled_hours = (h-1 < 0 ) ? 23 : h-1;
+                        this.scheduled_hours += '';
                     },
                     increase_minutes: function() {
-                        h = this.scheduled_minutes;
+                        h = parseInt(this.scheduled_minutes);
                         this.scheduled_minutes = (h+MINUTES_STEP >= 60) ? 0 : h+MINUTES_STEP;
+                        this.scheduled_minutes += '';
                     },
                     decrease_minutes: function() {
-                        h = this.scheduled_minutes;
+                        h = parseInt(this.scheduled_minutes);
                         this.scheduled_minutes = (h-MINUTES_STEP < 0 ) ? 60-MINUTES_STEP : h-MINUTES_STEP;
+                        this.scheduled_minutes += '';
+                    },
+                    format_hour: function() {
+                        var u = this.$options.utils;
+                        this.scheduled_hours = u.zero_pad(parseInt(this.scheduled_hours));
+                    },
+                    format_minutes: function() {
+                        var u = this.$options.utils;
+                        this.scheduled_minutes = u.zero_pad(parseInt(this.scheduled_minutes));
                     }
                 }
             })

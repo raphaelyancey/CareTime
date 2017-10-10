@@ -6,6 +6,8 @@ body {
 }
 #pickup-form span.separator {
   font-size: 10rem;
+  height: 17rem;
+  padding: 0 1rem;
 }
 #pickup-form input[type="text"] {
   font-size: 10rem;
