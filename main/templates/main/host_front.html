@@ -11,13 +11,13 @@
 
             {% if is_delayed %}
                 <h5 class="mt-5 ">{% trans "Le dernier rendez-vous a été prit avec un retard de" %}</h5>
-                <h1>{{human_delay}}</h1>
+                <h1 class="text-primary"><strong>{{human_delay}}</strong></h1>
             {% else %}
                 <h3 class="mt-5 text-success">Pas de retard sur le dernier rendez-vous</h3>
             {% endif %}
 
-            <h5 class="mt-5">{% trans "Aujourd'hui, le retard moyen par rendez-vous est de" %}</h5>
-            <h4>{{human_mean_delay}}</h4>
+            <h5 class="mt-5 text-muted">{% trans "Aujourd'hui, le retard moyen par rendez-vous est de" %}</h5>
+            <h4 class="text-muted">{{human_mean_delay}}</h4>
         {% else %}
             <h4 class="mt-5">{% trans "Aucun rendez-vous n'a été prit aujourd'hui" %}</h4>
         {% endif %}
