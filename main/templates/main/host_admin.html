@@ -6,11 +6,23 @@
 
     <form action="{% url 'host_admin' host.slug %}" method="POST" id="pickup-form">
 
-        <input type="text" v-model="scheduled_hour_1">
-        <input type="text" v-model="scheduled_hour_2">
-        <input type="text" v-model="scheduled_minute_1">
-        <input type="text" v-model="scheduled_minute_2">
-        [[ scheduled_time ]]
+        <div class="d-flex align-items-center">
+            <div class="d-flex flex-column">
+                <div class="time-control text-primary" v-on:click="increase_hour"><i class="fa fa-plus-circle"></i></div>
+                <div><input class="form-control" type="text" v-model="formatted_hours"></div>
+                <div class="time-control text-primary" v-on:click="decrease_hour"><i class="fa fa-minus-circle"></i></div>
+            </div>
+            
+            <span class="text-muted separator">:</span>
+            
+            <div class="d-flex flex-column">
+                <div class="time-control text-primary" v-on:click="increase_minutes"><i class="fa fa-plus-circle"></i></div>
+                <div><input class="form-control" type="text" v-model="formatted_minutes"></div>
+                <div class="time-control text-primary" v-on:click="decrease_minutes"><i class="fa fa-minus-circle"></i></div>
+            </div>
+        </div>
+
+        <pre>scheduled_time: [[ scheduled_time ]]</pre>
         <input id="id_scheduled_time" name="scheduled_time" v-model="scheduled_time" type="hidden">
         {% csrf_token %}
     </form>
@@ -21,18 +33,53 @@
 
     <script type="text/javascript">
         document.onready = function() {
-            var app = new Vue({
+
+            var MINUTES_STEP = 15;
+            
+            new Vue({
                 delimiters: ['[[', ']]'],
                 el: '#pickup-form',
                 data: {
-                    scheduled_hour_1: '1',
-                    scheduled_hour_2: '5',
-                    scheduled_minute_1: '1',
-                    scheduled_minute_2: '5'
+                    scheduled_hours: 15,
+                    scheduled_minutes: 13
                 },
                 computed: {
                     scheduled_time: function() {
-                        return this.scheduled_hour_1+this.scheduled_hour_2+':'+this.scheduled_minute_1+this.scheduled_minute_2;
+                        var u = this.$options.utils;
+                        return u.zero_pad(this.scheduled_hours)+':'+u.zero_pad(this.scheduled_minutes);
+                    },
+                    formatted_hours: function() {
+                        var u = this.$options.utils;
+                        return u.zero_pad(this.scheduled_hours);
+                    },
+                    formatted_minutes: function() {
+                        var u = this.$options.utils;
+                        return u.zero_pad(this.scheduled_minutes);
+                    },
+                },
+                utils: {
+                    zero_pad: function(input) {
+                        if(input < 10 && input > 0) return '0'+input;
+                        else if(input == 0) return '00';
+                        else return input+'';
+                    }
+                },
+                methods: {
+                    increase_hour: function() {
+                        h = this.scheduled_hours;
+                        this.scheduled_hours = (h+1 >= 24) ? 0 : h+1;
+                    },
+                    decrease_hour: function() {
+                        h = this.scheduled_hours;
+                        this.scheduled_hours = (h-1 < 0 ) ? 23 : h-1;
+                    },
+                    increase_minutes: function() {
+                        h = this.scheduled_minutes;
+                        this.scheduled_minutes = (h+MINUTES_STEP >= 60) ? 0 : h+MINUTES_STEP;
+                    },
+                    decrease_minutes: function() {
+                        h = this.scheduled_minutes;
+                        this.scheduled_minutes = (h-MINUTES_STEP < 0 ) ? 60-MINUTES_STEP : h-MINUTES_STEP;
                     }
                 }
             })

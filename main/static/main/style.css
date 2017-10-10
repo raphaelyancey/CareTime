@@ -1,7 +1,20 @@
 body {
-    padding-top: 1.5rem;
+  padding-top: 1.5rem;
 }
-
 .header {
-    padding-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+#pickup-form span.separator {
+  font-size: 10rem;
+}
+#pickup-form input[type="text"] {
+  font-size: 10rem;
+  width: 15rem;
+  text-align: center;
+  display: inline-block;
+}
+#pickup-form .time-control {
+  font-size: 3rem;
+  text-align: center;
+  cursor: pointer;
 }
