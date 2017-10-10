@@ -1,9 +1,13 @@
 {% extends "main/base.html" %}
 {% load i18n %}
 
+{% block header %}
+    <a href="/" class="btn btn-light"><i class="fa fa-angle-left"></i> &nbsp; {% trans "Retour" %}</a>
+{% endblock header %}
+
 {% block content %}
 
-    <div class="text-center mb-4">
+    <div class="text-center mb-4 mt-4 mt-sm-0">
         <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
         <h4 class="text-muted">{% trans "Prise en charge d'un rendez-vous prévu à" %}</h2>
     </div>
@@ -27,7 +31,7 @@
             </div>
             <input id="id_scheduled_time" name="scheduled_time" v-model="scheduled_time" type="hidden">
             {% csrf_token %}
-            <button class="btn btn-block btn-lg btn-primary mt-4">Prise en charge</button>
+            <button class="btn btn-block btn-lg btn-primary mt-4" role="submit">Prise en charge</button>
         </form>
     </div>
 
@@ -39,13 +43,17 @@
         document.onready = function() {
 
             var MINUTES_STEP = 15;
+            var NOW = {
+                hours: (new Date()).getHours(),
+                minutes: (new Date()).getMinutes()
+            };
             
             new Vue({
                 delimiters: ['[[', ']]'],
                 el: '#pickup-form',
                 data: {
-                    scheduled_hours: '15',
-                    scheduled_minutes: '13'
+                    scheduled_hours: NOW.hours,
+                    scheduled_minutes: NOW.minutes
                 },
                 computed: {
                     scheduled_time: function() {
@@ -77,15 +85,35 @@
                         this.scheduled_hours = u.format(this.scheduled_hours);
                     },
                     increase_minutes: function() {
+
                         h = parseInt(this.scheduled_minutes);
                         u = this.$options.utils;
-                        this.scheduled_minutes = (h+MINUTES_STEP >= 60) ? 0 : h+MINUTES_STEP;
+
+                        if(h >= 0 && h < 15)
+                            this.scheduled_minutes = 15;
+                        else if(h >= 15 && h < 30)
+                            this.scheduled_minutes = 30;
+                        else if(h >= 30 && h < 45)
+                            this.scheduled_minutes = 45;
+                        else if(h >= 45)
+                            this.scheduled_minutes = 0;
+
                         this.scheduled_minutes = u.format(this.scheduled_minutes);
                     },
                     decrease_minutes: function() {
+
                         h = parseInt(this.scheduled_minutes);
                         u = this.$options.utils;
-                        this.scheduled_minutes = (h-MINUTES_STEP < 0 ) ? 60-MINUTES_STEP : h-MINUTES_STEP;
+
+                        if(h > 0 && h <= 15)
+                            this.scheduled_minutes = 0;
+                        else if(h > 15 && h <= 30)
+                            this.scheduled_minutes = 15;
+                        else if(h > 30 && h <= 45)
+                            this.scheduled_minutes = 30;
+                        else if(h > 45 || h == 0)
+                            this.scheduled_minutes = 45;
+
                         this.scheduled_minutes = u.format(this.scheduled_minutes);
                     },
                     format_hour: function() {
