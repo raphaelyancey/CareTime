@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-06 16:29+0200\n"
+"POT-Creation-Date: 2017-10-12 17:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,16 +18,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: main/templates/main/about.html:5
+#: main/templates/main/about.html:6
 msgid ""
 "<i>CareTime</i> est une application web (encore au stade de prototype) ayant "
 "pour but de <b>limiter la frustration d'une attente trop longue en salle "
 "d'attente</b> chez un professionnel qui reçoit ses clients / patients. "
-"Initialement prévu pour les salles d'attente d'hôpitaux publics, sur une "
-"idée de ma mère !"
+"Initialement prévu pour les salles d'attente d'hôpitaux publics, et d'après "
+"une idée de ma mère."
 msgstr ""
 
-#: main/templates/main/about.html:11
+#: main/templates/main/about.html:12
 msgid ""
 "<b>Le principe est simple :</b> le professionnel renseigne l'heure prévue du "
 "rendez-vous à chaque prise en charge. <b>L'application calcule la différence "
@@ -37,19 +37,95 @@ msgid ""
 "l'heure pour se rendre compte qu'il faut patienter, par exemple, 30 minutes."
 msgstr ""
 
-#: main/templates/main/host_front.html:8
-msgid "Retard actuel"
+#: main/templates/main/base.html:8
+msgid "Temps d'attente en temps réel"
 msgstr ""
 
-#: main/templates/main/host_front.html:11
-msgid "Pas de retard à signaler"
+#: main/templates/main/base.html:22
+msgid "Accueil"
+msgstr ""
+
+#: main/templates/main/base.html:22
+msgid "(current)"
+msgstr ""
+
+#: main/templates/main/base.html:25
+msgid "Inscription"
+msgstr ""
+
+#: main/templates/main/base.html:28
+msgid "À propos"
+msgstr ""
+
+#: main/templates/main/host_admin.html:6
+msgid "Retour"
+msgstr ""
+
+#: main/templates/main/host_admin.html:15
+msgid "Prise en charge d'un rendez-vous prévu à"
+msgstr ""
+
+#: main/templates/main/host_admin.html:53
+msgid "Aujourd'hui"
+msgstr ""
+
+#: main/templates/main/host_admin.html:54
+msgid "Heure prévue"
+msgstr ""
+
+#: main/templates/main/host_admin.html:55
+msgid "Prise en charge"
+msgstr ""
+
+#: main/templates/main/host_front.html:12
+#, python-format
+msgid "Le dernier rendez-vous (%(time)s) a été prit avec un retard de "
+msgstr ""
+
+#: main/templates/main/host_front.html:13
+#: main/templates/main/host_front.html:19
+msgid "minutes"
+msgstr ""
+
+#: main/templates/main/host_front.html:15
+msgid "Pas de retard sur le dernier rendez-vous"
+msgstr ""
+
+#: main/templates/main/host_front.html:18
+msgid "Aujourd'hui, le retard moyen par rendez-vous est de"
+msgstr ""
+
+#: main/templates/main/host_front.html:21
+msgid "Aucun rendez-vous n'a été prit aujourd'hui"
+msgstr ""
+
+#: main/templates/main/host_front.html:25
+#, python-format
+msgid "Mis à jour le %(date)s à %(time)s"
+msgstr ""
+
+#: main/templates/main/host_login.html:10
+msgid "Connexion"
 msgstr ""
 
 #: main/templates/main/index.html:5
 msgid "Ils utilisent CareTime"
 msgstr ""
 
-#: main/templates/main/signup.html:5
+#: main/templates/main/organization.html:9
+#, python-format
+msgid "%(all_hosts_count)s professionnels inscrits"
+msgstr ""
+
+#: main/templates/main/organization.html:14
+msgid "Sous-organisations"
+msgstr ""
+
+#: main/templates/main/organization.html:25
+msgid "Professionnels"
+msgstr ""
+
+#: main/templates/main/signup.html:6
 msgid ""
 "<b>Si vous souhaitez utiliser apparaître sur le site principal</b> (celui "
 "sur lequel vous êtes actuellement),<br>merci d'envoyer un email à <a href="
@@ -57,7 +133,7 @@ msgid ""
 "\">caretime@raphaelyancey.fr</a>. <b>L'inscription est gratuite.</b>"
 msgstr ""
 
-#: main/templates/main/signup.html:11
+#: main/templates/main/signup.html:12
 msgid ""
 "<b>CareTime est open-source</b> sous licence MIT et peut ainsi être installé "
 "par quiconque sur sa propre infrastructure."

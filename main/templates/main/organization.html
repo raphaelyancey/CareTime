@@ -5,6 +5,10 @@
 
     <h2 class="mb-4">{{organization.name}}</h2>
 
+    {% if all_hosts_count > 0 %}
+        <p class="text-muted">{% blocktrans %}{{all_hosts_count}} professionnels inscrits{% endblocktrans %}</p>
+    {% endif %}
+
     {% if organization.organization_set.all %}
         <fieldset>
             <legend>{% trans "Sous-organisations" %}</legend>
@@ -25,6 +29,8 @@
                 {% endfor %}
             </ul>
         </fieldset>
+    {% else %}
+        <p class="text-muted">Aucun professionnel inscrit.</p>
     {% endif %}
     
 {% endblock content %}

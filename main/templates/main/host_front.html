@@ -5,22 +5,25 @@
 <div class="row">
     <div class="col text-center">
         <h2>{% if host.title %}{{ host.title }}{% endif %} {% if host.first_name %}{{ host.first_name }}{% endif %} {{host.last_name}}</h2>
+        <h4>{{today}}</h4>
 
-        {# `delay` can be used to tell wether there is an appointment today #}
-        {% if delay %}
-
+        {% if delay_delta %}
             {% if is_delayed %}
-                <h5 class="mt-5 ">{% trans "Le dernier rendez-vous a été prit avec un retard de" %}</h5>
-                <h1 class="text-primary"><strong>{{human_delay}}</strong></h1>
+                <h5 class="mt-5 ">{% blocktrans with time=last_appointment_time|date:"H:i" %}Le dernier rendez-vous ({{time}}) a été prit avec un retard de {% endblocktrans %}</h5>
+                <h1 class="text-primary"><strong>{{delay_minutes}} {% trans "minutes" %}</strong></h1>
             {% else %}
-                <h3 class="mt-5 text-success">Pas de retard sur le dernier rendez-vous</h3>
+                <h3 class="mt-5 text-success">{% trans "Pas de retard sur le dernier rendez-vous" %}</h3>
             {% endif %}
 
             <h5 class="mt-5 text-muted">{% trans "Aujourd'hui, le retard moyen par rendez-vous est de" %}</h5>
-            <h4 class="text-muted">{{human_mean_delay}}</h4>
+            <h4 class="text-muted">{{mean_delay_minutes}} {% trans "minutes" %}</h4>
         {% else %}
             <h4 class="mt-5">{% trans "Aucun rendez-vous n'a été prit aujourd'hui" %}</h4>
         {% endif %}
+
+        {% if updated_time %}
+            <p class="mt-4"><small class="text-muted">{% blocktrans with date=updated_time|date:"d F Y" time=updated_time|date:"H:i" %}Mis à jour le {{date}} à {{time}}{% endblocktrans %}</small></p>
+        {% endif %}
     </div>
 </div>
-{% endblock content %}  
+{% endblock content %}

@@ -43,7 +43,8 @@ def organization(request, org_slug):
 
     context = {
         'organization': organization,
-        'all_hosts': all_hosts.order_by('last_name')
+        'all_hosts': all_hosts.order_by('last_name'),
+        'all_hosts_count': len(all_hosts)
     }
 
     return render(request, 'main/organization.html', context)
@@ -56,10 +57,11 @@ def host_admin(request, host_slug):
 
     pickup_form = PickupForm()
     host = Host.objects.get(slug=host_slug)
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
     context = {
         'host': host,
-        'all_day_appointments': host.appointment_set.all().order_by('-scheduled_time'),
+        'all_day_appointments': host.appointment_set.filter(created_at__gte=today).order_by('-scheduled_time'),
         'pickup_form': pickup_form
     }
 
@@ -122,6 +124,12 @@ def host_front(request, host_slug):
 
     context = {'host': host}
 
+    try:
+        last_appointment = Appointment.objects.filter(host=host).latest(field_name='created_at')
+        context.update({'updated_time': last_appointment.created_at})
+    except Appointment.DoesNotExist:
+        pass
+
     def compute_appointment_delay(Appointment):
         pickup_date = datetime.combine(date.min, Appointment.pickup_time)
         scheduled_date = datetime.combine(date.min, Appointment.scheduled_time)
@@ -129,9 +137,10 @@ def host_front(request, host_slug):
         return delay
 
     try:
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         # Computing delay for the last appointment
-        last_appointment = Appointment.objects.filter(host=host).latest(field_name='pickup_time')
-        delay = compute_appointment_delay(last_appointment)
+        last_appointment_today = Appointment.objects.filter(host=host, created_at__gte=today).latest(field_name='pickup_time')
+        delay = compute_appointment_delay(last_appointment_today)
 
         # Computing mean delay of the day
 
@@ -146,11 +155,13 @@ def host_front(request, host_slug):
         print(mean_delay)
 
         context.update({
-            'is_delayed': delay > timedelta(0, 15*60), # A delay is considered as it if it's over x minutes
-            'delay': delay,
-            'human_delay': humanize.naturaldelta(delay),
-            'mean_delay': mean_delay,
-            'human_mean_delay': humanize.naturaldelta(mean_delay)
+            'is_delayed': delay > timedelta(0, 10 * 60), # A delay is considered as it if it's over x minutes
+            'delay_delta': delay,
+            'delay_minutes': int(delay.total_seconds() / 60),
+            'mean_delay_delta': mean_delay,
+            'mean_delay_minutes': int(mean_delay.total_seconds() / 60),
+            'last_appointment_time': last_appointment_today.scheduled_time,
+            'today': today,
         })
 
     except Appointment.DoesNotExist:
