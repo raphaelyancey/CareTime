@@ -22,7 +22,7 @@
         {% endif %}
 
         {% if updated_time %}
-            <p class="mt-4"><small class="text-muted">{% blocktrans with date=updated_time|date:"d F Y" time=updated_time|date:"H:i" %}Mis à jour le {{date}} à {{time}}{% endblocktrans %}</small></p>
+            <p class="mt-4"><small class="text-muted">{% blocktrans with date=updated_time|date:"d F Y" time=updated_time|date:"H:i" %}Dernière mise à jour du professionnel : le {{date}} à {{time}}{% endblocktrans %}</small></p>
         {% endif %}
     </div>
 </div>

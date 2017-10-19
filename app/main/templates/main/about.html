@@ -4,13 +4,19 @@
 {% block content %}
     <p>
         {% blocktrans trimmed %}
-        <i>CareTime</i> est une application web (encore au stade de prototype) ayant pour but de <b>limiter la frustration d'une attente trop longue en salle d'attente</b> chez un professionnel qui reçoit ses clients / patients. Initialement prévu pour les salles d'attente d'hôpitaux publics, et d'après une idée de ma mère.
+        <i>CareTime</i> est une application web (encore au stade de prototype) ayant pour but de <b>limiter la frustration d'une attente trop longue en salle d'attente</b> chez un professionnel qui reçoit ses clients / patients. Initialement prévu pour les salles d'attente d'hôpitaux publics (et d'après une idée de ma mère !).
         {% endblocktrans %}
     </p>
 
     <p>
         {% blocktrans trimmed %}
         <b>Le principe est simple :</b> le professionnel renseigne l'heure prévue du rendez-vous à chaque prise en charge. <b>L'application calcule la différence avec l'heure actuelle et en déduit le retard.</b> Les clients / patients peuvent se rendre sur le site, avant leur rendez-vous, et se tenir au courant du retard moyen au cours de la journée afin de ne pas arriver à l'heure pour se rendre compte qu'il faut patienter, par exemple, 30 minutes.
+        {% endblocktrans %}
+    </p>
+
+    <p>
+        {% blocktrans trimmed %}
+            Développé par 
         {% endblocktrans %}
     </p>
 {% endblock content %}

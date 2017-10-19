@@ -3,7 +3,6 @@ from .models import *
 from .forms import *
 from datetime import datetime, date, timedelta, time
 from numpy import mean
-import humanize
 from django.contrib.auth.hashers import check_password
 
 
